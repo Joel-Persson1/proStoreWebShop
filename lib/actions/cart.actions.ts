@@ -6,7 +6,6 @@ import { auth } from "@/auth";
 import { prisma } from "@/db/prisma";
 import { cartItemSchema, insertCartSchema } from "../validators";
 import { revalidatePath } from "next/cache";
-import { Prisma } from "@prisma/client";
 
 // Calculate cart prices
 
@@ -124,10 +123,11 @@ export async function addItemToCart(data: CartItem) {
 }
 
 export async function getMyCart() {
+  // Check for cart cookie
   const sessionCartId = (await cookies()).get("sessionCartId")?.value;
   if (!sessionCartId) throw new Error("Cart session not found");
 
-  // Get session and User id
+  // Get session and user ID
   const session = await auth();
   const userId = session?.user?.id ? (session.user.id as string) : undefined;
 
